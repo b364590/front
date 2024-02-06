@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import downloadstyle from "./Download.module.css";
 import axios from 'axios';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import background from "../../image/instai_icon.png"
 import background2 from "../../image/iconnew.png"
 
@@ -19,6 +19,7 @@ import {
 } from "react-bootstrap";
 
 function Download2() {
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id');
@@ -29,6 +30,13 @@ function Download2() {
   const type = searchParams.get('type');
   const userid = searchParams.get('userid');
   const projectName = searchParams.get('projectName');
+  const [data, setData] = useState({
+    user: "",//token
+    folder: "",//name
+    project_name: "",//image name
+    project_data: "",
+    upload_time: "",
+  });//使用者資料
 
   // 文件選擇
   const handleFileSelect = async (event) => {
@@ -46,37 +54,44 @@ function Download2() {
     setFilename(fileNames);
     setSelectedFiles(filteredFiles);
 
-    try {
-      console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');
+    const previews = filteredFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews([...imagePreviews, ...previews]);
+    console.log("imagePreviews:", imagePreviews);
+    console.log("previews:", previews);
+
+    const a = localStorage.getItem("token");
+    data.user = a.slice(7);
+    data.folder = localStorage.getItem("name");
+    data.project_name = fileNames;
+    data.project_data = previews;
+    const Datee = new Date();
+    data.upload_time = Datee.getTime();
+    console.log(data);
+
+      // console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');
 
       const formData = new FormData();
+      console.log("formData:", formData);
       for (let i = 0; i < files.length; ++i) {
         formData.append('file', files[i]);
       }
-
-      axios
-        .post(
-          `/upload/upload?filename=${fileNames}&username=${username}`,
-          formData,
-          { headers: { 'Content-Type': 'multipart/form-data' } }
-        )
+      console.log("formData2:", formData);
+  };
+  
+  const SendtoDatabase = () => {
+    axios
+        .post(`/upload`, {data},{ headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
-          console.log(response.data);
+          console.log("response.data:", response.data);
           alert('upload success');
         })
         .catch((error) => {
           console.error(error);
-          console.error('文件上傳失敗');
+          console.error("error:", '文件上傳失敗');
         });
-    } catch (error) {
-      console.error('发生错误:', error);
-    }
-
-    const previews = filteredFiles.map((file) => URL.createObjectURL(file));
-    setImagePreviews([...imagePreviews, ...previews]);
-    console.log("imagePreviews:",imagePreviews);
-    console.log("previews:",previews);
-  };
+        alert("ok");
+        navigate("/Project");
+  }
 
 
   // 文件下載 //modified
@@ -96,7 +111,7 @@ function Download2() {
     try {
       // 调用后端接口删除照片
       const response = await axios.delete(`/upload/delete/?filename=${filenameToDelete}`);
-      console.log(response.data);
+      console.log("response.data:", response.data);
       alert('照片删除成功');
     }
     catch (error) {
@@ -164,7 +179,7 @@ function Download2() {
             <input type="file" accept="image/*" multiple name="images" onChange={handleFileSelect} />
             <Button variant="dark" onClick={handleDeleteAllPreviews}>Remove all</Button>
             <Button variant="dark" onClick={handleDownloadAll}>Download All</Button>
-            <NavLink to={`/Step?id=${type ? id : userid}&project=${projectName}`}><Button variant="dark">Done</Button></NavLink>
+            <Button variant="dark" onClick={SendtoDatabase}>Done</Button>
           </label>
         </form>
       </div>

@@ -27,9 +27,9 @@ import { get } from "lodash";
 const CreateProject = ({add}) => {
   const navigate = useNavigate();
   const [data, setData] = useState({
-    name: "",
-    uploadtime: "",
+    user: "",
     folder_name:"",
+    uploadtime: "",
   });//使用者資料
   const [formerror, setFormerror] = useState({});//儲存錯誤資訊
   const [isSubmit, setIsSubmit] = useState(false);
@@ -87,7 +87,7 @@ const CreateProject = ({add}) => {
         
         axios.post("/WCreateFolder", { token: localStorage.getItem('token'),data },{headers:{"Content-Type":"application/json"}}).then((response) => {
         });
-        axios.post("/CreateFolder", data ).then((response) => {
+        axios.post("/CreateFolder", {data} ).then((response) => {
           console.log(response.data)
           const a = response.data.slice(0,7)
           console.log(a)

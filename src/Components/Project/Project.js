@@ -50,19 +50,24 @@ const Project = () => {
     //   }, []);//抓取後端資料
 
 
-    
+
     const name = localStorage.getItem("name");
     console.log("name:", name);
 
     useEffect(() => {
-        setData(prevData => [
-            ...prevData,
-            {
-                id: v4(),
-                name,
-            },
-        ]);
-    }, []);//存data值 但會覆寫
+        // setData(prevData => [
+        //     ...prevData,
+        //     {
+        //         id: v4(),
+        //         name,
+        //     },
+        // ]);
+         axios.get('/WCreateFolder')
+            .then((response) => console.log(response))
+             .catch((error) => console.log(error))
+            
+         
+    }, []);//存data值
 
     console.log("data:", data);
 
