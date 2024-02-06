@@ -1,0 +1,17 @@
+cd src
+
+npm i --lagacy-peer-deps
+
+Project:渲染整個頁面
+
+List:渲染增加的檔案
+
+Item:渲染增加檔案裡的細節
+
+CreateProject:增加檔案
+
+/*
+Add Project 裡的東西目前還沒辦法用
+路徑的部份還沒加
+其他有問題的話再來一起討論
+
