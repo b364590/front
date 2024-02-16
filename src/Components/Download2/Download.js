@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import downloadstyle from "./Download.module.css";
 import axios from 'axios';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
@@ -17,6 +17,7 @@ import {
   Alert,
 
 } from "react-bootstrap";
+import { name } from 'xml-name-validator';
 
 function Download2() {
   const navigate = useNavigate();
@@ -25,18 +26,21 @@ function Download2() {
   const id = searchParams.get('id');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [prevdata, setPrevdata] = useState([]);
+  const [data2, setData2] = useState([]);
   const [username, setUsername] = useState("");
   const [filename, setFilename] = useState("");
   const type = searchParams.get('type');
   const userid = searchParams.get('userid');
   const projectName = searchParams.get('projectName');
-  const [data, setData] = useState({
-    user: "",//token
-    folder: "",//name
-    project_name: "",//image name
-    project_data: "",
-    upload_time: "",
-  });//使用者資料
+  const Username = localStorage.getItem('token').slice(7)
+  // 獲取整個查詢字串
+  var queryString = window.location.search;
+  // 解析查詢字串為鍵值對的物件
+  var params = new URLSearchParams(queryString);
+  var id2 = params.get('id');
+  var folder_name = params.get('folder_name');
+  
 
   // 文件選擇
   const handleFileSelect = async (event) => {
@@ -60,13 +64,20 @@ function Download2() {
     console.log("previews:", previews);
 
     const a = localStorage.getItem("token");
-    data.user = a.slice(7);
-    data.folder = localStorage.getItem("name");
-    data.project_name = fileNames;
-    data.project_data = previews;
     const Datee = new Date();
-    data.upload_time = Datee.getTime();
-    console.log(data);
+    const searchParams = new URLSearchParams(window.location.search);
+    const folderName = searchParams.get('folder_name');// 使用get方法獲取folder_name參數的值
+
+    const data = {
+      user : a.slice(7),
+      folder : folderName,
+      project_name : fileNames,
+      project_data : previews,
+      upload_time : Datee.getTime(),
+    }
+      setPrevdata((prevList) => [...prevList, data]);
+
+    // console.log("prevdata:", data);
 
       // console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');
 
@@ -77,21 +88,32 @@ function Download2() {
       }
       console.log("formData2:", formData);
   };
-  
+
   const SendtoDatabase = () => {
-    axios
-        .post(`/upload`, {data},{ headers: { 'Content-Type': 'application/json' } })
+    for (let i = 0; i < prevdata.length; ++i) {
+      if (prevdata && prevdata.length > 0 && prevdata[0] !== undefined) {
+        console.log(`I ${i} :`,prevdata[i])
+        
+        axios.post(`/upload`, { data: prevdata[i] } ,{ headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
           console.log("response.data:", response.data);
-          alert('upload success');
         })
         .catch((error) => {
           console.error(error);
           console.error("error:", '文件上傳失敗');
         });
+        // 處理未定義的情況
+      } else {
+        console.log("undifined")
+      }
+    }
         alert("ok");
-        navigate("/Project");
+        const Username = localStorage.getItem('token').slice(7)
+        navigate(`/Steppage?id=${id2}&folder_name=${folder_name}`);
   }
+
+  // console.log("data:", data);
+  console.log("prevdata:", prevdata);//存多筆圖片資料
 
 
   // 文件下載 //modified
@@ -167,7 +189,7 @@ function Download2() {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item >
-          <Nav.Link href="/Project">
+          <Nav.Link href={`/Steppage?id=${id2}&folder_name=${folder_name}`}>
             <Button variant="outline-danger"  >Back to Step page</Button>{' '}
           </Nav.Link>
         </Nav.Item>

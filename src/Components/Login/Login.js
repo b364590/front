@@ -50,12 +50,13 @@ const Login = ({ setUserState }) => {
           if (res.data.includes("Success")) {
             localStorage.setItem('token',res.data); //登入成功從後端取得該使用者名稱
             console.log(localStorage.getItem('token'))
+            const Username = localStorage.getItem('token').slice(7)
             //setUserState(res.data.user);
             const remove = "Success";
             const id = res.data.replace(remove, "");
             console.log(id);
             alert("Log in Success!");
-            navigate("/Project");
+            navigate(`/Project?Username:${Username}`);
           }//如果帳密跟資料庫裡有對應到 會印出id 並且連結至/Download2
           else if (res.data.includes("errr")) {
             //setUserState(res.data.user);

@@ -1,4 +1,6 @@
-import Item from "./Item";
+import CheckDataItem from "./CheckDataItem";
+import background from "../../image/instai_icon.png"
+import background2 from "../../image/iconnew.png"
 import {
   Card,
   Button,
@@ -12,16 +14,16 @@ import {
 
 } from "react-bootstrap";
 
-const List = ({ listData, deleteData}) => {
+const CheckDataList = ({ listData, deleteData}) => {
   //console.log("listData:", listData);
   return (
     <Row xs={1} md={2} lg={3} style={{ gap: "16px" , justifyContent: "space-evenly"}}>
       {listData.map((item) => { 
-         const { folder_name, id } = item;
+         const { photo_data, id } = item;
          return (
-           <Item
+           <CheckDataItem
              id={id}
-             folder_name={folder_name}
+             photo_data={background}
              deleteData={deleteData}
            />
          )}
@@ -31,4 +33,4 @@ const List = ({ listData, deleteData}) => {
   );
 };
 
-export default List;
+export default CheckDataList;

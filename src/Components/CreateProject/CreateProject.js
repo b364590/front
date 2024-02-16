@@ -33,16 +33,16 @@ const CreateProject = ({add}) => {
   });//使用者資料
   const [formerror, setFormerror] = useState({});//儲存錯誤資訊
   const [isSubmit, setIsSubmit] = useState(false);
-  const [name, setName] = useState("");
+  const [folder_name, setFolder_name] = useState("");
   const [user, setUser] = useState([]);//存之前檔案的空陣列
   function nameChange(e) {
-    const { name, value } = e.target;
-    setName(e.target.value);
+    const { folder_name, value } = e.target;
+    setFolder_name(e.target.value);
     const Datee = new Date();
     data.uploadtime = Datee.getTime();
     setData({
       ...data,
-      [name]: value,
+      [folder_name]: value,
     });
   }
 
@@ -67,7 +67,7 @@ const CreateProject = ({add}) => {
 
   const Submituser = (e) => {
     e.preventDefault();//停止事件的默認動作
-    setFormerror(errorDetect(name));//判斷input裡的資料有沒有錯誤
+    setFormerror(errorDetect(folder_name));//判斷input裡的資料有沒有錯誤
     setIsSubmit(true);
     // console.log('Detect:', name);
     console.log('Detect:', data);
@@ -80,9 +80,9 @@ const CreateProject = ({add}) => {
     if (Object.keys(formerror).length === 0 && isSubmit) {
       const a =JSON.stringify(data)
       console.log(localStorage.setItem('data',a))
-      console.log(localStorage.setItem('name',name))
+      console.log(localStorage.setItem('folder_name',folder_name))
       console.log(localStorage.getItem('token'))
-      data.folder_name=name;
+      data.folder_name=folder_name;
       const WCreateFolder = () => {
         
         axios.post("/WCreateFolder", { token: localStorage.getItem('token'),data },{headers:{"Content-Type":"application/json"}}).then((response) => {
@@ -95,8 +95,9 @@ const CreateProject = ({add}) => {
         });
       };
       WCreateFolder()
-      
-      navigate("/Project")
+      const Username = localStorage.getItem('token').slice(7)
+      alert("Success !");
+      navigate(`/Project?Username:${Username}`)
     }
   }, [formerror, isSubmit])//如果無錯誤資訊，資料會存到資料庫裡並且連至sign in
 
@@ -134,7 +135,7 @@ const CreateProject = ({add}) => {
               name="name"
               id="name"
               className="me-2"
-              values={data.name}
+              values={data.folder_name}
               onChange={nameChange}
             />
             <p className={basestyle.error}>{formerror.name}</p>

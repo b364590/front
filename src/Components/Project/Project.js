@@ -30,7 +30,6 @@ const Project = () => {
     // const [alldata, setAllData] = useState([]);
     const [issubmit, setIssubmit] = useState(true);
 
-    console.log(filteredData);
     // useEffect(() => {
     //     const fetchData = async () => {
     //       try {
@@ -49,27 +48,41 @@ const Project = () => {
     //     fetchData();
     //   }, []);//抓取後端資料
 
-
-
-    const name = localStorage.getItem("name");
-    console.log("name:", name);
+    // useEffect(() => {
+    //     // setData(prevData => [
+    //     //     ...prevData,
+    //     //     {
+    //     //         id: v4(),
+    //     //         name,
+    //     //     },
+    //     // ]);
+    //      axios.get('/WCreateFolder')
+    //         .then((response) => console.log(response))
+    //          .catch((error) => console.log(error))
+    // }, []);//存data值
 
     useEffect(() => {
-        // setData(prevData => [
-        //     ...prevData,
-        //     {
-        //         id: v4(),
-        //         name,
-        //     },
-        // ]);
-         axios.get('/WCreateFolder')
-            .then((response) => console.log(response))
-             .catch((error) => console.log(error))
-            
-         
-    }, []);//存data值
+        axios.get('/WCreateFolder')
+          .then(response => {
+            console.log("response:",response.data);
+              // 使用 set 方法更新 state
+              if (Array.isArray(response.data)) {
+                // 使用 set 方法更新 state
+                setData(prevData => [...prevData, ...response.data]);
+              } else {
+                // 如果不是数组，可以考虑将其包装成数组再更新 state
+                setData(prevData => [...prevData, response.data]);
+              }
+            })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+      }, []); // 第二个参数为空数组，表示只在组件挂载时执行一次
+
+      
 
     console.log("data:", data);
+    console.log("filteredData:", filteredData);
 
     useEffect(() => {
         if (issubmit)
@@ -82,7 +95,7 @@ const Project = () => {
 
     const handleSearchClick = () => {
         const updatedFilteredData = data.filter((item) =>
-            item.name.toLowerCase().includes(searchKeyword.toLowerCase())
+            item.folder_name.toLowerCase().includes(searchKeyword.toLowerCase())
         );
         setIssubmit(false);
         setFilteredData(updatedFilteredData);
