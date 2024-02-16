@@ -90,7 +90,7 @@ const Requirement = ({ add }) => {
     if (Object.keys(formerror).length === 0 && isSubmit) {
       if (confirm('Confirm your requirement')) {
         console.log("Yes")
-        axios.post("/Requirement", { data }, { headers: { "Content-Type": "application/json" } }).then((response) => {
+        axios.post("/Requirement", { data, inform},{ headers: { "Content-Type": "application/json" } }).then((response) => {
         })
           .then((response) => {
             console.log("response.data:", response.data);
@@ -99,7 +99,7 @@ const Requirement = ({ add }) => {
             console.error(error);
             console.error("error:", '文件上傳失敗');
           });
-        axios.post("/Requirement", { inform }, { headers: { "Content-Type": "application/json" } }).then((response) => {
+        /*axios.post("/Requirement", { inform }, { headers: { "Content-Type": "application/json" } }).then((response) => {
         })
           .then((response) => {
             console.log("response.data:", response.data);
@@ -107,7 +107,7 @@ const Requirement = ({ add }) => {
           .catch((error) => {
             console.error(error);
             console.error("error:", '文件上傳失敗');
-          });
+          });*/
         navigate(`/Steppage?id=${id2}&folder_name=${folder_name2}`)// 用戶按下確定
       } else {
         console.log("wait")// 用戶按下取消
