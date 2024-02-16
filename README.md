@@ -3,17 +3,19 @@ cd src
 
 npm i --lagacy-peer-deps
 
-Project:渲染整個頁面
+進度:
 
-List:渲染增加的檔案
+1.做完requirement、checkdata、steppage介面部分
 
-Item:渲染增加檔案裡的細節
+2.新增資料夾部分解決
 
-CreateProject:增加檔案
+需要的東西
+1. /Project、/Checkdata需要刪除的路徑
+2. /upload 無法傳多個物件進去 但改回之前的可以上傳一張
+3. /Requirement需打包一個.json檔(應該是存requirement的data值 所以我把牠們分開來)
+4. /CheckData需要能get到 id、project_data的路徑
 
-/*
-Add Project 裡的東西目前還沒辦法用
-其他有問題的話再來一起討論
+
 
 <!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 
