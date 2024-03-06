@@ -48,7 +48,7 @@ const Login = ({ setUserState }) => {
         .post("/signin", user)
         .then((res) => {
           if (res.data.includes("Success")) {
-            localStorage.setItem('token',res.data); //登入成功從後端取得該使用者名稱
+            localStorage.setItem('token', res.data); //登入成功從後端取得該使用者名稱
             console.log(localStorage.getItem('token'))
             const Username = localStorage.getItem('token').slice(7)
             //setUserState(res.data.user);
@@ -64,7 +64,7 @@ const Login = ({ setUserState }) => {
             setUserDetails({
               email: "",
               password: "",
-          });
+            });
           }//失敗後重新登入 並且清空輸入格的東西
         });
     }

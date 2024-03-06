@@ -5,12 +5,12 @@ import axios from 'axios';
 const Item = ({ id, folder_name, deleteData }) => {
   const [show, setShow] = useState(false);
 
-  /* const deleteItem = () => {
-     deleteData((prev) => {
-       alert("Delete Success!");
-       return prev.filter((item) => item.id !== id);
-     });
-   };*/
+  //  const deleteItem = () => {
+  //    deleteData((prev) => {
+  //      alert("Delete Success!");
+  //      return prev.filter((item) => item.id !== id);
+  //    });
+  //  };
 
   const deleteItem = () => {
     console.log(111)

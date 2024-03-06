@@ -30,6 +30,7 @@ function Download2() {
   const [data2, setData2] = useState([]);
   const [username, setUsername] = useState("");
   const [filename, setFilename] = useState("");
+  // const [blobArray,setBlobArray] = useState([]);
   const type = searchParams.get('type');
   const userid = searchParams.get('userid');
   const projectName = searchParams.get('projectName');
@@ -40,7 +41,7 @@ function Download2() {
   var params = new URLSearchParams(queryString);
   var id2 = params.get('id');
   var folder_name = params.get('folder_name');
-  
+
 
   // 文件選擇
   const handleFileSelect = async (event) => {
@@ -68,48 +69,60 @@ function Download2() {
     const searchParams = new URLSearchParams(window.location.search);
     const folderName = searchParams.get('folder_name');// 使用get方法獲取folder_name參數的值
 
+    const blobArray = await Promise.all(filteredFiles.map(file => new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const blob = new Blob([new Uint8Array(reader.result)]);
+        resolve(blob);
+      };
+      reader.readAsArrayBuffer(file);
+    })));
+
+    console.log("blobArray:", blobArray);
+
     const data = {
-      user : a.slice(7),
-      folder : folderName,
-      project_name : fileNames,
-      project_data : previews,
-      upload_time : Datee.getTime(),
+      user: a.slice(7),
+      folder: folderName,
+      project_name: fileNames,
+      project_data: previews,
+      upload_time: Datee.getTime(),
     }
-      setPrevdata((prevList) => [...prevList, data]);
+    setPrevdata((prevList) => [...prevList, data]);
 
     // console.log("prevdata:", data);
 
-      // console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');
+    // console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');
 
-      const formData = new FormData();
-      console.log("formData:", formData);
-      for (let i = 0; i < files.length; ++i) {
-        formData.append('file', files[i]);
-      }
-      console.log("formData2:", formData);
+    const formData = new FormData();
+    console.log("formData:", formData);
+    for (let i = 0; i < files.length; ++i) {
+      formData.append('file', files[i]);
+    }
+    console.log("formData2:", formData);
   };
 
   const SendtoDatabase = () => {
     for (let i = 0; i < prevdata.length; ++i) {
       if (prevdata && prevdata.length > 0 && prevdata[0] !== undefined) {
-        console.log(`I ${i} :`,prevdata[i])
-        
-        axios.post(`/upload`, { data: prevdata[i] } ,{ headers: { 'Content-Type': 'application/json' } })
-        .then((response) => {
-          console.log("response.data:", response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-          console.error("error:", '文件上傳失敗');
-        });
+        console.log(`I ${i} :`, prevdata[i])
+
+        axios.post(`/upload`, { data: prevdata[i] }, { headers: { 'Content-Type': 'application/json' } })
+          .then((response) => {
+            console.log("response.data:", response.data);
+          })
+          .catch((error) => {
+            console.error(error);
+            console.error("error:", '文件上傳失敗');
+          });
         // 處理未定義的情況
       } else {
         console.log("undifined")
       }
     }
-        alert("ok");
-        const Username = localStorage.getItem('token').slice(7)
-        navigate(`/Steppage?id=${id2}&folder_name=${folder_name}`);
+    alert("ok");
+    const Username = localStorage.getItem('token').slice(7)
+    localStorage.setItem('Upload', true);
+    navigate(`/Steppage?id=${id2}&folder_name=${folder_name}`);
   }
 
   // console.log("data:", data);

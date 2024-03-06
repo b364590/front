@@ -14,16 +14,26 @@ import {
 
 } from "react-bootstrap";
 
+
 const CheckDataList = ({ listData, deleteData}) => {
-  //console.log("listData:", listData);
+
+  // const imageFiles = listData.filter(
+  //   (item) =>
+  //     item.project_name &&
+  //     (item.project_name.endsWith(".jpg") ||
+  //       item.project_name.endsWith(".jpeg") ||
+  //       item.project_name.endsWith(".png"))
+  // );
+
   return (
     <Row xs={1} md={2} lg={3} style={{ gap: "16px" , justifyContent: "space-evenly"}}>
       {listData.map((item) => { 
-         const { photo_data, id } = item;
+        // const {fileName, path} =item
+         console.log("filePath:",item)
          return (
            <CheckDataItem
-             id={id}
-             photo_data={background}
+            //  fileName={fileName}
+             filePath={item}
              deleteData={deleteData}
            />
          )}

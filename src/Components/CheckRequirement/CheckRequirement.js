@@ -3,7 +3,7 @@ import basestyle from "../Base.module.css";
 // import registerstyle from "./Register.module.css";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Requirementstyle from "./Requirement.module.css";
+import Requirementstyle from "./CheckRequirement.module.css";
 import axios from "axios";
 import background from "../../image/instai_icon.png"
 import background2 from "../../image/iconnew.png"
@@ -27,11 +27,10 @@ import { get } from "lodash";
 const Requirement = ({ add }) => {
   
   const navigate = useNavigate();
-
   const [data, setData] = useState({
-    question1: "AAAAAAAAAAAAA?",
+    question1: "",
     answer1: "",
-    question2: "BBBBBBBBBBBBBB?",
+    question2: "",
     answer2: "",
   });//問題答案資料
 
@@ -51,6 +50,17 @@ const Requirement = ({ add }) => {
   var params = new URLSearchParams(queryString);
   var id2 = params.get('id');
   var folder_name2 = params.get('folder_name');
+
+  useEffect(() => {
+    axios.get(`/RequirementJson/${folder_name2}`)
+      .then(response => {
+        console.log("response:",response.data);
+          setData(response.data)
+        })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []); //get .json檔案裡面的東西
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -100,16 +110,7 @@ const Requirement = ({ add }) => {
             console.error(error);
             console.error("error:", '文件上傳失敗');
           });
-        /*axios.post("/Requirement", { inform }, { headers: { "Content-Type": "application/json" } }).then((response) => {
-        })
-          .then((response) => {
-            console.log("response.data:", response.data);
-          })
-          .catch((error) => {
-            console.error(error);
-            console.error("error:", '文件上傳失敗');
-          });*/
-        localStorage.setItem('Fill out the form',true); 
+        localStorage.setItem('Check your Requirement',true); 
         navigate(`/Steppage?id=${id2}&folder_name=${folder_name2}`)// 用戶按下確定
       } else {
         console.log("wait")// 用戶按下取消
@@ -154,7 +155,7 @@ const Requirement = ({ add }) => {
               name="answer1"
               id="answer1"
               className="me-2"
-              values={data.answer1}
+              defaultValue={data.answer1}
               onChange={handleChange}
             />
             <p className={basestyle.error}>{formerror.answer1}</p>
@@ -171,7 +172,7 @@ const Requirement = ({ add }) => {
               name="answer2"
               id="answer2"
               className="me-2"
-              values={data.answer2}
+              defaultValue={data.answer2}
               onChange={handleChange}
             />
             <p className={basestyle.error}>{formerror.answer2}</p>

@@ -22,13 +22,91 @@ import {
 
 
 const Steppage = () => {
+  const navigate = useNavigate();
   // 獲取整個查詢字串
   var queryString = window.location.search;
   // 解析查詢字串為鍵值對的物件
   var params = new URLSearchParams(queryString);
   var id = params.get('id');
   var folder_name = params.get('folder_name');
-  
+  const [Upload, setUpload] = useState(false)
+  const [Fillouttheform, setFillouttheform] = useState(false)
+  const [Checkyourdata, setCheckyourdata] = useState(false)
+  const [CheckyourRequirement, setCheckyourRequirement] = useState(false)
+  const [Training, setTraining] = useState(true)
+
+  useEffect(() => {
+    const Upload = localStorage.getItem('Upload') === 'true'
+    setUpload(Upload)
+    console.log("Upload:", Upload)
+
+    const Fillouttheform = localStorage.getItem('Fill out the form') === 'true';
+    setFillouttheform(Fillouttheform)
+    console.log("Fillouttheform:", Fillouttheform)
+
+    const Checkyourdata = localStorage.getItem('Check your data') === 'true';
+    setCheckyourdata(Checkyourdata)
+    console.log("Checkyourdata:", Checkyourdata)
+
+    const CheckyourRequirement = localStorage.getItem('Check your Requirement') === 'true';
+    setCheckyourRequirement(CheckyourRequirement)
+    console.log("CheckyourRequirement:", CheckyourRequirement)
+
+    localStorage.setItem('Training', true);
+    const Training = localStorage.getItem('Training') === 'true';
+    setTraining(Training)
+    console.log("Training:", Training)
+
+    if (Upload && Fillouttheform && Checkyourdata && CheckyourRequirement) {
+      localStorage.setItem('Training', false);
+      const Training = localStorage.getItem('Training') === 'true';
+      setTraining(Training)
+      console.log("Training:", Training)
+    }
+  }, []);
+
+  const reset = () => {
+    localStorage.setItem('Upload', false);
+    localStorage.setItem('Fill out the form', false);
+    localStorage.setItem('Check your data', false);
+    localStorage.setItem('Check your Requirement', false);
+    localStorage.setItem('Training', true);
+
+    const Upload = localStorage.getItem('Upload') === 'true'
+    setUpload(Upload)
+    console.log("Upload:", Upload)
+
+    const Fillouttheform = localStorage.getItem('Fill out the form') === 'true';
+    setFillouttheform(Fillouttheform)
+    console.log("Fillouttheform:", Fillouttheform)
+
+    const Checkyourdata = localStorage.getItem('Check your data') === 'true';
+    setCheckyourdata(Checkyourdata)
+    console.log("Checkyourdata:", Checkyourdata)
+
+    const CheckyourRequirement = localStorage.getItem('Check your Requirement') === 'true';
+    setCheckyourRequirement(CheckyourRequirement)
+    console.log("CheckyourRequirement:", CheckyourRequirement)
+
+
+  }
+
+  const UploadComfirm = () => {
+    navigate(`/Download2?id=${id}&folder_name=${folder_name}`);
+  }
+  const RequirementComfirm = (e) => {
+    navigate(`/Requirement?id=${id}&folder_name=${folder_name}`)
+  }
+  const CheckUploadComfirm = (e) => {
+    navigate(`/CheckData?id=${id}&folder_name=${folder_name}`)
+  }
+  const CheckRequirementComfirm = (e) => {
+    navigate(`/CheckRequirement?id=${id}&folder_name=${folder_name}`)
+  }
+  const TrainingComfirm = (e) => {
+    navigate(`/Training?id=${id}&folder_name=${folder_name}`)
+  }
+
   return (
     <div className={Steppagestyle.container}>
       {/* 登出介面 */}
@@ -59,6 +137,9 @@ const Steppage = () => {
             <Button variant="outline-danger">All Project</Button>{' '}
           </Nav.Link>
         </Nav.Item>
+        {/* <Nav.Item >
+          <Button variant="outline-danger" onClick={reset}>reset</Button>{' '}
+        </Nav.Item> */}
       </Nav>
 
       {/* 查詢專案&新增專案 */}
@@ -101,9 +182,9 @@ const Steppage = () => {
                   to use to train your style model
                 </p>
               </p>
-              <Nav.Link href={`/Download2?id=${id}&folder_name=${folder_name}`}>
-                <Button variant="primary" >Upload</Button>{' '}
-              </Nav.Link>
+              {/* <Nav.Link href={`/Download2?id=${id}&folder_name=${folder_name}`} onClick={UploadComfirm}> */}
+              <Button variant="primary" disabled={Upload} onClick={UploadComfirm} >Upload</Button>{' '}
+              {/* </Nav.Link> */}
             </p>
 
             <p className={Steppagestyle.page}>
@@ -114,9 +195,7 @@ const Steppage = () => {
                   AI model training
                 </p>
               </p>
-              <Nav.Link href={`/Requirement?id=${id}&folder_name=${folder_name}`}>
-                <Button variant="primary" >Fill out the form</Button>{' '}
-              </Nav.Link>
+              <Button variant="primary" disabled={Fillouttheform} onClick={RequirementComfirm}>Fill out the form</Button>{' '}
             </p>
 
             <p className={Steppagestyle.page}>
@@ -124,19 +203,15 @@ const Steppage = () => {
                 <p className={Steppagestyle.title}>· Training your AI model</p>
                 <p className={Steppagestyle.inform}>· you haven't submitted data yet</p>
               </p>
-              <Nav.Link href={`/CheckData?id=${id}&folder_name=${folder_name}`}>
-                <Button variant="primary">Check your data</Button>{' '}
-              </Nav.Link>
+              <Button variant="primary" disabled={Checkyourdata} onClick={CheckUploadComfirm}>Check your data</Button>{' '}
             </p>
 
             <p className={Steppagestyle.page}>
               <p>
                 <p className={Steppagestyle.title}>· Training your AI model</p>
-                <p className={Steppagestyle.inform}>· 還沒做完</p>
+                <p className={Steppagestyle.inform}>· you haven't submitted data yet</p>
               </p>
-              <Nav.Link href="/Download2">
-                <Button variant="primary" >Check your Requirement</Button>{' '}
-              </Nav.Link>
+              <Button variant="primary" disabled={CheckyourRequirement} onClick={CheckRequirementComfirm}>Check your Requirement</Button>{' '}
             </p>
 
             <p className={Steppagestyle.page}>
@@ -144,6 +219,7 @@ const Steppage = () => {
                 <p className={Steppagestyle.title}>· Download your AI model</p>
                 <p className={Steppagestyle.inform}>· Download your AI model</p>
               </p>
+              <Button variant="primary" disabled={Training} onClick={TrainingComfirm}>Training</Button>{' '}
             </p>
 
           </Row>

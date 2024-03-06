@@ -23,7 +23,9 @@ import {
 
 
 const CheckData = () => {
+    localStorage.setItem('Check your data', true);
     const [data, setData] = useState([]);
+    const [dataname, setDataname] = useState([]);
     const [filteredData, setFilteredData] = useState(data);
     // const [alldata, setAllData] = useState([]);
     const [issubmit, setIssubmit] = useState(true);
@@ -33,34 +35,33 @@ const CheckData = () => {
     var params = new URLSearchParams(queryString);
     var id = params.get('id');
     var folder_name = params.get('folder_name');
+    // const fileName = filePath.split('\\').pop(); // 使用 split 和 pop
 
     useEffect(() => {
-        axios.get('/WCreateFolder')//get id跟project_data值
+        axios.get(`/upload/${folder_name}`)//get &${folder_name}跟路徑值
+
             .then(response => {
                 console.log("response:", response.data);
+                const allPaths = response.data.photoPaths;
+                const imagePaths = allPaths.filter(path => (
+                    path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")
+                ));
+                setData(imagePaths)
                 // 使用 set 方法更新 state
-                if (Array.isArray(response.data)) {
-                    // 使用 set 方法更新 state
-                    setData(prevData => [...prevData, ...response.data]);
-                } else {
-                    // 如果不是数组，可以考虑将其包装成数组再更新 state
-                    setData(prevData => [...prevData, response.data]);
-                }
+                // if (Array.isArray(response.data)) {
+                //     // 使用 set 方法更新 state
+                //     setData(prevData => [...prevData, ...response.data]);
+                // } else {
+                //     // 如果不是数组，可以考虑将其包装成数组再更新 state
+                //     setData(prevData => [...prevData, response.data]);
+                // }
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    }, []); // 第二个参数为空数组，表示只在组件挂载时执行一次
-
-
+    }, []);
 
     console.log("data:", data);
-    console.log("filteredData:", filteredData);
-
-    useEffect(() => {
-        if (issubmit)
-            setFilteredData(data);
-    }, [data]);
 
     return (
         <div className={Projectstyle.container}>
@@ -88,7 +89,7 @@ const CheckData = () => {
             <p className={Projectstyle.title}>Photos:</p>
             <Row className="justify-content-start flex-direction-column">
                 <Col>
-                    <CheckDataList listData={filteredData} deleteData={setData} />
+                    <CheckDataList listData={data} deleteData={setData} />
                 </Col>
             </Row>
         </div>

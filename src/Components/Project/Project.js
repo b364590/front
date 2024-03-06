@@ -29,6 +29,10 @@ const Project = () => {
     const [filteredData, setFilteredData] = useState(data);
     // const [alldata, setAllData] = useState([]);
     const [issubmit, setIssubmit] = useState(true);
+    localStorage.setItem('Upload', false);
+    localStorage.setItem('Fill out the form', false);
+    localStorage.setItem('Check your data', false);
+    localStorage.setItem('Check your Requirement', false);
 
     // useEffect(() => {
     //     const fetchData = async () => {
@@ -63,23 +67,23 @@ const Project = () => {
 
     useEffect(() => {
         axios.get('/WCreateFolder')
-          .then(response => {
-            console.log("response:",response.data);
-              // 使用 set 方法更新 state
-              if (Array.isArray(response.data)) {
+            .then(response => {
+                console.log("response:", response.data);
                 // 使用 set 方法更新 state
-                setData(prevData => [...prevData, ...response.data]);
-              } else {
-                // 如果不是数组，可以考虑将其包装成数组再更新 state
-                setData(prevData => [...prevData, response.data]);
-              }
+                if (Array.isArray(response.data)) {
+                    // 使用 set 方法更新 state
+                    setData(prevData => [...prevData, ...response.data]);
+                } else {
+                    // 如果不是数组，可以考虑将其包装成数组再更新 state
+                    setData(prevData => [...prevData, response.data]);
+                }
             })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
-      }, []); // 第二个参数为空数组，表示只在组件挂载时执行一次
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, []); // 第二个参数为空数组，表示只在组件挂载时执行一次
 
-      
+
 
     console.log("data:", data);
     console.log("filteredData:", filteredData);

@@ -9,6 +9,8 @@ import Download2 from "./Components/Download2/Download";
 import Requirement from "./Components/Requirement/Requirement";
 import Steppage from "./Components/Steppage/Steppage";
 import CheckData from "./Components/CheckData/CheckData";
+import CheckRequirement from "./Components/CheckRequirement/CheckRequirement";
+import Training from "./Components/Training/Training";
 
 function App() {
   const [userstate, setUserState] = useState({});
@@ -24,6 +26,8 @@ function App() {
           <Route path="/Requirement" element={<Requirement/>}></Route>
           <Route path="/Steppage" element={<Steppage/>}></Route>
           <Route path="/CheckData" element={<CheckData/>}></Route>
+          <Route path="/CheckRequirement" element={<CheckRequirement/>}></Route>
+          <Route path="/Training" element={<Training/>}></Route>
         </Routes>
       </Router>
     </div>

@@ -1,0 +1,99 @@
+.loading {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  margin: 200px 0px 0px 50%;
+  transform: translate(-50%, -50%);
+  animation: animationContainer 1s ease infinite;
+}
+
+.shape1 {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background-color: #1875e5;
+  left: 0;
+  border-top-left-radius: 100%;
+  animation: animationShape1 0.5s ease infinite alternate;
+}
+
+.shape2 {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background-color: #c5523f;
+  right: 0;
+  border-top-right-radius: 100%;
+  animation: animationShape2 0.5s ease infinite alternate;
+}
+
+.shape3 {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background-color: #499255;
+  bottom: 0;
+  border-bottom-left-radius: 100%;
+  animation: animationShape3 0.5s ease infinite alternate;
+}
+
+.shape4 {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background-color: #f2b736;
+  right: 0;
+  bottom: 0;
+  border-bottom-right-radius: 100%;
+  animation: animationShape4 0.5s ease infinite alternate;
+}
+
+@keyframes animationContainer {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animationShape1 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-3px, -3px);
+  }
+}
+
+@keyframes animationShape2 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(3px, -3px);
+  }
+}
+
+@keyframes animationShape3 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-3px, 3px);
+  }
+}
+
+@keyframes animationShape4 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(3px, 3px);
+  }
+}
