@@ -100,15 +100,24 @@ function Download2() {
     }
     console.log("formData2:", formData);
   };
-
+  /*user: a.slice(7),
+      folder: folderName,
+      project_name: fileNames,
+      project_data: previews,
+      upload_time: Datee.getTime(),*/
   const SendtoDatabase = () => {
     for (let i = 0; i < prevdata.length; ++i) {
       if (prevdata && prevdata.length > 0 && prevdata[0] !== undefined) {
         console.log(`I ${i} :`, prevdata[i])
-
-        axios.post(`/upload`, { data: prevdata[i] }, { headers: { 'Content-Type': 'application/json' } })
+        const formData = new FormData();
+        formData.append('image', prevdata[0].project_data);
+        /*formData.append('user', prevdata[0].user);
+        formData.append('folder', prevdata[0].folder);
+        formData.append('project_name', prevdata[0].project_name);
+        formData.append('upload_time', prevdata[0].upload_time);*/
+        axios.post(`/upload`,formData , { headers: { 'Content-Type': 'multipart/form-data' } })
           .then((response) => {
-            console.log("response.data:", response.data);
+            console.log("response.data:", response.data); 
           })
           .catch((error) => {
             console.error(error);
