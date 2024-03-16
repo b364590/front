@@ -15,7 +15,8 @@ const CheckDataItem = ({ fileNames ,filePath, deleteData }) => {
   //     return prev.filter((item) => item.id !== id);
   //   });
   // };
-  const fileName = filePath.split('\\').pop(); // 使用 split 和 pop
+  const parts = filePath.split("=");
+  const fileName = parts[parts.length - 1]; // 使用 split 和 pop
   var queryString = window.location.search;
   var params = new URLSearchParams(queryString);
   var id = params.get('id');
@@ -24,21 +25,22 @@ const CheckDataItem = ({ fileNames ,filePath, deleteData }) => {
   const deleteItem = async () => {
     try {
       // 在此处加入调用后端删除的逻辑
-      console.log('Delete filePath:', filePath);
       console.log('Delete filePath:', fileName);
       // 这里调用删除接口，示例：await axios.delete(`/api/delete-item?filePath=${encodeURIComponent(filePath)}`);
-      axios.delete(`/DeleteItem/${String(filePath)}/${String(fileName)}`)//路徑要改一下
+      axios.delete(`/DeleteItem/${folder_name}/${fileName}`)//路徑要改一下
       deleteData((prev) => {
-        console.log(987)
-        console.log(filePath)
+        console.log(799)
+        console.log(folder_name)
         console.log(fileName)
         alert("Delete Success!");
-        return prev.filter((item) => item.split('\\').pop() !== fileName);
+        return prev.filter((item) => item.split('=').pop() !== fileName);
       });
     } catch (error) {
       console.error("Error deleting image:", error);
     }
   };
+
+
   useEffect(() => {
 
   }, []);
