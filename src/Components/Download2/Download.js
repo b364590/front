@@ -45,18 +45,34 @@ function Download2() {
 
   // 文件選擇
   const handleFileSelect = async (event) => {
-    const files = event.target.files;
-    const fileArray = Array.from(files);
+    
+    const files = new Array();
+    for(let i=0; i < event.target.files.length; i++){
+      files.push(event.target.files[i]);
+    }
+    console.log(typeof files);
+    console.log(files);
+    // const formData1 = new FormData();
+    // for(let i=0; i < event.target.files.length; i++){
+    //   formData1.append('image',  files[i]);
+    //   axios.post(`/uploadphoto/${folder_name}`, formData1, { headers: { 'Content-Type': 'multipart/form-data' } })
+    //       .then((response) => {
+    //         console.log("response.data:", response.data);
+    //       })
+    //       .catch((error) => {
+    //         console.error(error);
+    //         console.error("error:", '文件上傳失敗');
+    //       });
+    // }//photo 單一拉出來上傳
 
     // 過濾文件
     const allowedFileTypes = ['image/jpeg', 'image/png'];
-    const filteredFiles = fileArray.filter((file) =>
+    const filteredFiles = files.filter((file) =>
       allowedFileTypes.includes(file.type)
     );
+   const fileNames = files.map((file) => file.name);
 
-    const fileNames = filteredFiles.map((file) => file.name);
-
-    setFilename(fileNames);
+   setFilename(fileNames);
     setSelectedFiles(filteredFiles);
 
     const previews = filteredFiles.map((file) => URL.createObjectURL(file));
@@ -84,15 +100,10 @@ function Download2() {
       user: a.slice(7),
       folder: folderName,
       project_name: fileNames,
-      project_data: previews,
+      project_data: files,
       upload_time: Datee.getTime(),
     }
     setPrevdata((prevList) => [...prevList, data]);
-
-    // console.log("prevdata:", data);
-
-    // console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');
-
     const formData = new FormData();
     console.log("formData:", formData);
     for (let i = 0; i < files.length; ++i) {
@@ -100,32 +111,36 @@ function Download2() {
     }
     console.log("formData2:", formData);
   };
-  /*user: a.slice(7),
-      folder: folderName,
-      project_name: fileNames,
-      project_data: previews,
-      upload_time: Datee.getTime(),*/
+
   const SendtoDatabase = () => {
     for (let i = 0; i < prevdata.length; ++i) {
-      if (prevdata && prevdata.length > 0 && prevdata[0] !== undefined) {
-        console.log(`I ${i} :`, prevdata[i])
-        const formData = new FormData();
-        formData.append('image', prevdata[0].project_data);
-        /*formData.append('user', prevdata[0].user);
-        formData.append('folder', prevdata[0].folder);
-        formData.append('project_name', prevdata[0].project_name);
-        formData.append('upload_time', prevdata[0].upload_time);*/
-        axios.post(`/upload`,formData , { headers: { 'Content-Type': 'multipart/form-data' } })
-          .then((response) => {
-            console.log("response.data:", response.data); 
-          })
-          .catch((error) => {
-            console.error(error);
-            console.error("error:", '文件上傳失敗');
-          });
+      if (prevdata && prevdata.length > 0 && prevdata[0].project_data !== undefined) {
+        console.log(`I ${i} :`,typeof prevdata[i].project_data[0])
+        // const formData = new FormData();
+        // formData.append('image',  prevdata[i].project_data);
+        // axios.post(`/upload`, { data: prevdata[i] }, { headers: { 'Content-Type': 'application/json' } })
+        //   .then((response) => {
+        //     console.log("response.data:", response.data);
+        //   })
+        //   .catch((error) => {
+        //     console.error(error);
+        //     console.error("error:", '文件上傳失敗');
+        //   });
+        const formData1 = new FormData();
+        formData1.append('image', prevdata[i].project_data[0]);
+        axios.post(`/upload/?user=${prevdata[i].user}&project_name=${prevdata[i].project_name[0]}&folder=${prevdata[i].folder}&upload_time=${prevdata[i].upload_time}`, 
+        formData1, { headers: { 'Content-Type': 'multipart/form-data' } })
+            .then((response) => {
+              console.log("response.data:", response.data);
+            })
+            .catch((error) => {
+              console.error(error);
+              console.error("error:", '文件上傳失敗');
+            });
+      //photo 單一拉出來上傳
         // 處理未定義的情況
       } else {
-        console.log("undifined")
+        console.log("undefine")
       }
     }
     alert("ok");

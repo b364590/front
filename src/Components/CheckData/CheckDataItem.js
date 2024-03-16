@@ -25,9 +25,13 @@ const CheckDataItem = ({ fileNames ,filePath, deleteData }) => {
     try {
       // 在此处加入调用后端删除的逻辑
       console.log('Delete filePath:', filePath);
+      console.log('Delete filePath:', fileName);
       // 这里调用删除接口，示例：await axios.delete(`/api/delete-item?filePath=${encodeURIComponent(filePath)}`);
-      axios.delete(`/DeleteItem/${folder_name}/${fileName}`)//路徑要改一下
+      axios.delete(`/DeleteItem/${String(filePath)}/${String(fileName)}`)//路徑要改一下
       deleteData((prev) => {
+        console.log(987)
+        console.log(filePath)
+        console.log(fileName)
         alert("Delete Success!");
         return prev.filter((item) => item.split('\\').pop() !== fileName);
       });
@@ -59,7 +63,7 @@ const CheckDataItem = ({ fileNames ,filePath, deleteData }) => {
     return (
       <>
         <Card style={{ width: '16rem', margin: '15px' }}>
-          <Card.Img variant="top" src={filePath} alt={`image ${fileName}`} style={{ width: '14rem' }} />
+          <Card.Img variant="top" src={filePath} alt={`image ${fileName}`} style={{ width: '14rem', height: '14rem' }} />
           <Card.Body>
             <Button variant="danger" onClick={deleteItem}>
               Delete

@@ -38,15 +38,14 @@ const CheckData = () => {
     // const fileName = filePath.split('\\').pop(); // 使用 split 和 pop
 
     useEffect(() => {
-        axios.get(`/upload/${folder_name}`)//get &${folder_name}跟路徑值
+      axios.get(`/upload/${folder_name}`)//get &${folder_name}跟路徑值
 
             .then(response => {
                 console.log("response:", response.data);
-                const allPaths = response.data.photoPaths;
-                const imagePaths = allPaths.filter(path => (
-                    path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")
-                ));
-                setData(imagePaths)
+                // const imagePaths = allPaths.filter(path => (
+                //     path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")
+                // ));
+                
                 // 使用 set 方法更新 state
                 // if (Array.isArray(response.data)) {
                 //     // 使用 set 方法更新 state
@@ -55,13 +54,15 @@ const CheckData = () => {
                 //     // 如果不是数组，可以考虑将其包装成数组再更新 state
                 //     setData(prevData => [...prevData, response.data]);
                 // }
+                
+                
+                console.log("response:",response.data);
+                setData(response.data)
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
     }, []);
-
-    console.log("data:", data);
 
     return (
         <div className={Projectstyle.container}>
